@@ -28,7 +28,17 @@
  */
 
 params.name             = "tutorial_data"
-params.seq              = "$baseDir/tutorial/data/tips16_0.5_00{1,2}.0400.fa"
+
+//params.seq              = "$baseDir/tutorial/data/tips16_0.5_00{1,2}.0400.fa"
+
+params.seq="$baseDir/tutorial/data/"
+//params.seqPrefix="*"
+//params.seqSuffix=".fa"
+params.seqPrefix="tips16_0.5_00"
+params.seqSuffix="0400.fa"
+params.seqName="${params.seqPrefix}{1,2}.${params.seqSuffix}"
+allSeq="${params.seq}/${params.seqName}"
+
 params.ref              = "$baseDir/tutorial/data/asymmetric_0.5.unroot.tree"
 params.output           = "$baseDir/tutorial/results/"
 params.straps           = 4
@@ -68,7 +78,7 @@ log.info "\n"
  */
 
 Channel
-    .fromPath( params.seq )
+    .fromPath( allSeq )
     .ifEmpty { error "Cannot find any input sequence files matching: ${params.seq}" }
     .map { file -> tuple( file.baseName, file ) }
     .into { datasetsA; datasetsB }
